@@ -10,7 +10,12 @@ def home():
 
 @app.route("/categories")
 def categories():
-    return render_template("categories.html")
+    #     Whenever we call this function by clicking the navbar link for Categories, it will query
+    # the database and retrieve all records from this table, then sort them by the category name.
+    categories = list(Category.query.order_by(Category.category_name).all())
+   #  Then pass this variable into our rendered template,
+   #  so that we can use this data to display everything to our users.
+    return render_template("categories.html", categories=categories)
 
 
 @app.route("/add_category", methods=["GET", "POST"])

@@ -21,7 +21,15 @@ app = Flask(__name__)
 # Specify two app configuration variables, and these will both come from our
 # environment variables.
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URL")
+
+if os.environ.get("DEVELOPMENT") == "True":
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URL")
+else:
+    uri = os.environ.get("DATABASE_URL")
+    if uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
+    app.config["SQLALCHEMY_DATABASE_URI"] = uri
+
 # app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://postgres:{os.environ.get('123')}@localhost:5433/taskmanager"
 
 # Create an instance of the imported SQLAlchemy() class, and set to the instance

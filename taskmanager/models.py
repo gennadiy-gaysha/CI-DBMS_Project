@@ -3,8 +3,9 @@ from taskmanager import db
 # Creating DB Tables, using the declarative base from SQLAlchemy's model -
 # using the default db.Model
 
+
 class Category(db.Model):
-    #schema for Category model
+    # schema for Category model
     id = db.Column(db.Integer, primary_key=True)
     category_name = db.Column(db.String(25), unique=True, nullable=False)
 # Since we aren't using db.Column, this will not be visible on the database itself like
@@ -17,24 +18,26 @@ class Category(db.Model):
 # all related tasks and delete them.
 # The last parameter here is lazy=True, which means that when we query the database for
 # categories, it can simultaneously identify any task linked to the categories.
-    tasks =db.relationship("Task", backref="category", cascade="all, delete", lazy=True)
+    tasks = db.relationship("Task", backref="category",
+                            cascade="all, delete", lazy=True)
 
     def __repr__(self):
-    # represent itself in the form of a string
-     return self.category_name
+        # represent itself in the form of a string
+        return self.category_name
 
 
 class Task(db.Model):
-    #schema for Category model
+    # schema for Category model
     id = db.Column(db.Integer, primary_key=True)
     task_name = db.Column(db.String(50), unique=True, nullable=False)
     task_description = db.Column(db.Text, nullable=False)
     is_urgent = db.Column(db.Boolean, default=False, nullable=False)
     due_date = db.Column(db.Date, nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey("category.id", ondelete="CASCADE"), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey(
+        "category.id", ondelete="CASCADE"), nullable=False)
 
     def __repr__(self):
-    # represent itself in the form of a string
-     return "#{0} - Task: {1} | Urgent: {2}".format(
-       self.id, self.task_name, self.is_urgent
-	  )
+        # represent itself in the form of a string
+        return "#{0} - Task: {1} | Urgent: {2}".format(
+            self.id, self.task_name, self.is_urgent
+        )
